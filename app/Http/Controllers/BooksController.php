@@ -48,6 +48,7 @@ class BooksController extends Controller
         return response()->json(Book::find($id));
     }
 
+
     /**
      * Update the specified resource in storage.
      *
@@ -74,4 +75,16 @@ class BooksController extends Controller
         Book::findOrFail($id)->delete();
         return response()->json("deleted successfully",200);
     }
+        /**
+     * get videos that belong to this book
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getVideos($id)
+    {
+        $book = Book::with('videos')->find($id);
+        return response()->json($book->videos);
+    }
+
 }
