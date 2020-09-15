@@ -31,6 +31,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     $router->get("sendmessage", "Controller@sendMessage");
 // });
 
-Route::middleware('auth:api')->group(function () use ($router) {
+// Route::middleware('auth:api')->group(function () use ($router) {
     Route::resource('video', 'VideoController');
-});
+// });
