@@ -22,15 +22,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 // Route::middleware('auth:api')->group(function () use ($router) {
-    $router->get("books", "BooksController@showAllBooks");
-    $router->get("books/{id}/videos", "BooksController@getVideos");
-    $router->get("books/{id}", "BooksController@showOneBook");
-    $router->post("books/", "BooksController@createBook");
-    $router->delete("books/{id}", "BooksController@deleteBook");
-    $router->put("books/{id}", "BooksController@updateBook");
-    $router->get("sendmessage", "Controller@sendMessage");
+$router->get("books", "BooksController@showAllBooks");
+$router->get("books/{id}/videos", "BooksController@getVideos");
+$router->get("books/{id}", "BooksController@showOneBook");
+$router->post("books/", "BooksController@createBook");
+$router->delete("books/{id}", "BooksController@deleteBook");
+$router->put("books/{id}", "BooksController@updateBook");
+$router->get("sendmessage", "Controller@sendMessage");
 // });
 
 // Route::middleware('auth:api')->group(function () use ($router) {
-    Route::resource('video', 'VideoController');
+Route::resource('video', 'VideoController');
 // });
+Route::post("subscribe/{channel_id}", "YoutubeWebhookController@subscribe");
