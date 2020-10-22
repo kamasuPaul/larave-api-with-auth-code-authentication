@@ -35,3 +35,5 @@ $router->get("sendmessage", "Controller@sendMessage");
 Route::resource('video', 'VideoController');
 // });
 Route::post("subscribe/{channel_id}", "YoutubeWebhookController@subscribe");
+Route::get("callback", "YoutubeWebhookController@youtube_subscribe_callback");
+Route::post("callback", "YoutubeWebhookController@youtube_subscribe_callback");
