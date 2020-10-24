@@ -6,6 +6,7 @@ use App\Mail\NewVideoUploaded;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class YoutubeWebhookController extends Controller
 {
@@ -49,6 +50,12 @@ class YoutubeWebhookController extends Controller
     {
         if (isset($_GET['hub_challenge'])) {
             echo $_REQUEST['hub_challenge'];
+            $video = (object)[];
+            $video->title = "Test";
+            $video->id = "Test Id";
+            foreach (['kamasupaul1@gmail.com'] as $recipient) {
+                Mail::to($recipient)->send(new NewVideoUploaded($video));
+            }
         } else {
 
             $video = $this->parseYoutubeUpdate(file_get_contents('php://input'));
