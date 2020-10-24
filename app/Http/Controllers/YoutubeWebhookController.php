@@ -10,7 +10,7 @@ use PhpParser\Node\Expr\Cast\Object_;
 
 class YoutubeWebhookController extends Controller
 {
-    public $video;
+    public  $video;
     public function subscribe(Request $request, $channel_id)
     {
         // var_dump(openssl_get_cert_locations());
@@ -52,7 +52,7 @@ class YoutubeWebhookController extends Controller
             echo $_REQUEST['hub_challenge'];
             $video = (object)[];
             $video->title = "Test";
-            $video->id = "Test Id";
+            $video->video_id = "Test Id";
             foreach (['kamasupaul1@gmail.com'] as $recipient) {
                 Mail::to($recipient)->send(new NewVideoUploaded($video));
             }

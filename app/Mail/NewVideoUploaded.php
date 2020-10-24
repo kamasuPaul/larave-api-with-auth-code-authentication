@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use stdClass;
 
 class NewVideoUploaded extends Mailable
 {
@@ -17,9 +18,10 @@ class NewVideoUploaded extends Mailable
      * @return void
      */
     public  $video;
-    public function __construct($video)
+
+    public function __construct($video1)
     {
-        // $this->$video = $video;
+        $this->video = $video1;
     }
 
     /**

@@ -68,11 +68,11 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    New video uploaded
                 </div>
-                {{-- <p>{{$video->title}}</p> --}}
-                {{-- <p>{{$video->video_id}}</p> --}}
-                Test 12345
+                <p>{{$video->title}}</p>
+                <p>{{$video->video_id}}</p>
+            <p><a href="http://www.youtube.com/watch?v={{$video->video_id}}">watch here</a></p>
             </div>
         </div>
     </body>
