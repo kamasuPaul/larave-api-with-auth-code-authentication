@@ -70,8 +70,9 @@
                 <div class="title m-b-md">
                     Laravel
                 </div>
-                <p>{{$video->title}}</p>
-                <p>{{$video->video_id}}</p>
+                {{-- <p>{{$video->title}}</p> --}}
+                {{-- <p>{{$video->video_id}}</p> --}}
+                Test 12345
             </div>
         </div>
     </body>
