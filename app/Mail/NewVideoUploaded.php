@@ -16,10 +16,10 @@ class NewVideoUploaded extends Mailable
      *
      * @return void
      */
-    public $video;
+    public  $video;
     public function __construct($video)
     {
-        $this->$video = $video;
+        // $this->$video = $video;
     }
 
     /**
