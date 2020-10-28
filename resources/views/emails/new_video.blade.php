@@ -45,7 +45,7 @@
             }
 
             .title {
-                font-size: 84px;
+                font-size: 24px;
             }
 
             .links > a {
@@ -67,10 +67,9 @@
         <div class="flex-center position-ref full-height">
 
             <div class="content">
-                <div class="title m-b-md">
-                    New video uploaded
-                </div>
-                <p>{{$video->title}}</p>
+                <h3>{{$video->title}}</h3>
+                <h5>Published: {{$video->published}}</h5>
+                <h5>Updated: {{$video->updated}}</h5>
                 <p>{{$video->video_id}}</p>
             <p><a href="http://www.youtube.com/watch?v={{$video->video_id}}">watch here</a></p>
             </div>

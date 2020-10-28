@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Mail\NewVideoUploaded;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Mailable;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use PhpParser\Node\Expr\Cast\Object_;
@@ -58,9 +61,19 @@ class YoutubeWebhookController extends Controller
             }
         } else {
 
-            $video = $this->parseYoutubeUpdate(file_get_contents('php://input'));
+            $video = (object) $this->parseYoutubeUpdate(file_get_contents('php://input'));
             foreach (['keypaul.kp@gmail.com'] as $recipient) {
                 Mail::to($recipient)->send(new NewVideoUploaded($video));
+
+                // $url = "http://www.youtube.com/watch?v={{$video->video_id}}";
+                // Mail::to($recipient)->send(new Mailable((new MailMessage)
+                //     ->greeting("Hello,")
+                //     ->line('A new video  has been uploaded on youtube channel' . $video->channel_title)
+                //     ->line($video->title)
+                //     ->line('Click the button below to watch the video')
+                //     ->action('Watch video', $url)
+                //     ->line('If you did not request to receive notifications for this channel please ignore this email')
+                //     ->line('Thank you for using our application!')));
             }
         }
     }
@@ -69,13 +82,26 @@ class YoutubeWebhookController extends Controller
         $xml = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
         $video_id = substr((string)$xml->entry->id, 9);
         $channel_id = substr((string)$xml->entry->author->uri, 32);
+        $channel_title = (string)$xml->entry->author->name;
         $published = (string)$xml->entry->published;
+        $updated = (string)$xml->entry->updated;
         $title = (string)$xml->entry->title;
+
+        try {
+            $dt_p = Carbon::parse($published);
+            $published = $dt_p->toDayDateTimeString();
+            $dt_u = Carbon::parse($updated);
+            $updated = $dt_p->toDayDateTimeString();
+        } catch (\Throwable $th) {
+        }
+
 
         return array(
             'video_id' => $video_id,
             'channel_id' => $channel_id,
+            'channel_title' => $channel_title,
             'published' => $published,
+            'updated' => $updated,
             'title' => $title
         );
     }
