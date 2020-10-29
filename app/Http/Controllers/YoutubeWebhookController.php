@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Mail\NewVideoUploaded;
+use App\Notifications\VideoUpdated;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use PhpParser\Node\Expr\Cast\Object_;
 
 class YoutubeWebhookController extends Controller
@@ -62,19 +64,8 @@ class YoutubeWebhookController extends Controller
         } else {
 
             $video = (object) $this->parseYoutubeUpdate(file_get_contents('php://input'));
-            foreach (['keypaul.kp@gmail.com'] as $recipient) {
-                Mail::to($recipient)->send(new NewVideoUploaded($video));
-
-                // $url = "http://www.youtube.com/watch?v={{$video->video_id}}";
-                // Mail::to($recipient)->send(new Mailable((new MailMessage)
-                //     ->greeting("Hello,")
-                //     ->line('A new video  has been uploaded on youtube channel' . $video->channel_title)
-                //     ->line($video->title)
-                //     ->line('Click the button below to watch the video')
-                //     ->action('Watch video', $url)
-                //     ->line('If you did not request to receive notifications for this channel please ignore this email')
-                //     ->line('Thank you for using our application!')));
-            }
+            Notification::route('mail', 'keypaul.kp@gmail.com')
+                ->notify(new VideoUpdated($video));
         }
     }
     function parseYoutubeUpdate($data)
