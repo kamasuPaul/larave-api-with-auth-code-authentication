@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use PhpParser\Node\Expr\Cast\Object_;
@@ -51,21 +52,28 @@ class YoutubeWebhookController extends Controller
 
         // return  preg_match('200', $request->headers_list[0]) === 1;
     }
-    public function youtube_subscribe_callback()
+    public function youtube_subscribe_callback(Request $request)
     {
-        if (isset($_GET['hub_challenge'])) {
-            echo $_REQUEST['hub_challenge'];
+        if ($request->has('hub_challenge')) {
+
             $video = (object)[];
             $video->title = "Test";
             $video->video_id = "Test Id";
+            $video->channel_id = "122324";
+            $video->channel_title = "Test channel";
+            $video->published = "2015-03-06T21:40:57+00:00";
+            $video->updated = "2015-03-06T21:40:57+00:00";
             foreach (['kamasupaul1@gmail.com'] as $recipient) {
-                Mail::to($recipient)->send(new NewVideoUploaded($video));
+                Mail::to($recipient)->queue(new NewVideoUploaded($video));
             }
+            $hub_challenge = $request->input('hub_challenge');
+            return $hub_challenge;
         } else {
 
             $video = (object) $this->parseYoutubeUpdate(file_get_contents('php://input'));
-            Notification::route('mail', 'keypaul.kp@gmail.com')
+            Notification::route('mail', 'kamasupaul1@gmail.com')
                 ->notify(new VideoUpdated($video));
+            return response("okay", 204);
         }
     }
     function parseYoutubeUpdate($data)
