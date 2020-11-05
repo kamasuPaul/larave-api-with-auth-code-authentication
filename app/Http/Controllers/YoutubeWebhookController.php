@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProcessUploadedVideo;
 use App\Mail\NewVideoUploaded;
 use App\Notifications\VideoUpdated;
 use Carbon\Carbon;
@@ -71,8 +72,9 @@ class YoutubeWebhookController extends Controller
         } else {
 
             $video = (object) $this->parseYoutubeUpdate(file_get_contents('php://input'));
-            Notification::route('mail', 'kamasupaul1@gmail.com')
-                ->notify(new VideoUpdated($video));
+            ProcessUploadedVideo::dispatch($video)
+                ->delay(now()->addMinute(3));
+
             return response("okay", 204);
         }
     }
