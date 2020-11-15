@@ -106,4 +106,8 @@ class YoutubeWebhookController extends Controller
             'title' => $title
         );
     }
+    public function cron()
+    {
+        return response("okay", 200);
+    }
 }
