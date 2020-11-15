@@ -30,7 +30,7 @@ class YoutubeWebhookController extends Controller
         $subscribe_url = 'https://pubsubhubbub.appspot.com/subscribe';
         $topic_url = 'https://www.youtube.com/xml/feeds/videos.xml?channel_id={CHANNEL_ID}';
         // $callback_url = 'http://' . $_SERVER['SERVER_NAME'] . '/api/callback';
-        $callback_url = 'http://book-summaries-api.kamasupaul.com/api/callback';
+        $callback_url = 'https://book-summaries-api.kamasupaul.com/api/callback';
         $data = array(
             'hub.mode' => $subscribe ? 'subscribe' : 'unsubscribe',
             'hub.callback' => $callback_url,
