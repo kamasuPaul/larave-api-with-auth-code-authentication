@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Jobs\ProcessUploadedVideo;
 use App\Mail\NewVideoUploaded;
 use App\Notifications\VideoUpdated;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -14,14 +13,52 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use PhpParser\Node\Expr\Cast\Object_;
+use Alaouy\Youtube\Facades\Youtube;
+use App\YoutubeChannel;
+use Carbon\Traits\Date;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class YoutubeWebhookController extends Controller
 {
     public  $video;
     public function subscribe(Request $request, $channel_id)
     {
-        // var_dump(openssl_get_cert_locations());
+        //save this channel inorder to resubscribe later
+        $cha = new YoutubeChannel();
+        $cha->channel_id = $channel_id;
+        $cha->save();
+        //get videos for this channel
+        $videoList = Youtube::listChannelVideos($channel_id, 40);
+        foreach ($videoList as $vid) {
+            $video_info = $vid;
+            $vid_title = $video_info->snippet->title;
+            $vid_description = $video_info->snippet->description;
+            $vid_id = $video_info->id->videoId;
+            $vid_image_url = $video_info->snippet->thumbnails->high->url;
+            $vid_duration = "07:00";
+            $current_timestamp = Carbon::now()->timestamp;
+            $current_timestamp = $current_timestamp * 1000;
 
+            $url = "https://video-book-summaries.kamasupaul.com/services/insertOneVideo";
+            $data = (object)[];
+            $data->name = Str::limit($vid_title, 100);
+            $data->url = $vid_id;
+            $data->duration = $vid_duration;
+            $data->draft = "1";
+            $data->featured = "0";
+            $data->description = $vid_description;
+            // $data->image = $vid_image_url;
+            $data->created_at = $current_timestamp;
+            $data->last_update = $current_timestamp;
+
+            //add video to the database
+            $response = Http::post($url, (array)$data);
+            Log::debug($response);
+        }
+        // return response((array)$videoList, 200);
+        //finally subscribe to the channel using publish subscribe
         return $this->subscribeYoutubeChannel($request, $channel_id);
     }
 
@@ -38,21 +75,13 @@ class YoutubeWebhookController extends Controller
             'hub.topic' => str_replace(array('{CHANNEL_ID}'), array($channel_id), $topic_url)
         );
 
+
         $response = Http::asForm()->retry(3, 100)->post($subscribe_url, $data);
-        return $response;
 
-        // $opts = array('http' =>
-        // array(
-        //     'method'  => 'POST',
-        //     'header'  => 'Content-type: application/x-www-form-urlencoded',
-        //     'content' => http_build_query($data)
-        // ));
-
-        // $context  = stream_context_create($opts);
-
-        // return @file_get_contents($subscribe_url, false, $context);
-
-        // return  preg_match('200', $request->headers_list[0]) === 1;
+        //TODO get previous videos and add them 
+        // List videos in a given channel, return an array of PHP objects
+        $videoList = Youtube::listChannelVideos($channel_id, 40);
+        return response((array)$videoList);
     }
     public function youtube_subscribe_callback(Request $request)
     {
@@ -107,8 +136,20 @@ class YoutubeWebhookController extends Controller
             'title' => $title
         );
     }
-    public function cron()
+    public function cron(Request $request)
     {
+        //resubscribe only every friday
+        $date = Carbon::now();
+        if ($date->isFriday()) {
+            $channels = YoutubeChannel::all();
+            foreach ($channels as $channel) {
+                // resubscribe to every channel
+
+                $this->subscribeYoutubeChannel($request, $channel->channel_id);
+            }
+        }
+
+
         return response("okay", 200);
     }
 }
