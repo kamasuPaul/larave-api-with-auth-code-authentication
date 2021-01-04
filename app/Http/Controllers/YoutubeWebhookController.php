@@ -80,8 +80,8 @@ class YoutubeWebhookController extends Controller
 
         //TODO get previous videos and add them 
         // List videos in a given channel, return an array of PHP objects
-        $videoList = Youtube::listChannelVideos($channel_id, 40);
-        return response((array)$videoList);
+        // $videoList = Youtube::listChannelVideos($channel_id, 40);
+        return $response;
     }
     public function youtube_subscribe_callback(Request $request)
     {
@@ -138,33 +138,16 @@ class YoutubeWebhookController extends Controller
     }
     public function cron(Request $request)
     {
-       $chs = [
-        'UCAeAB8ABXGoGMbXuYPmiu2A',
-        'UC4IhgQSETRnAIEb694TwQxQ',
-        'UC6rV0GDL4Y6Uo1Vql6u56xw',
-        'UC2bUdDQ_HCWQZfaqMVBTxxQ',
-    ];
-    foreach ($chs as $ch) {
-        // try {
-            $url ='https://book-summaries-api.kamasupaul.com/api/subscribe/'.$ch;
-            Log::debug($url);
-            $res = Http::post($url);
-            Log::debug($res);
 
-        // } catch (\Throwable $th) {
-        //     Log::debug($th);
-        // }
-    }
-        //resubscribe only every friday
-        // $date = Carbon::now();
-        // if ($date->isFriday()) {
-        //     $channels = YoutubeChannel::all();
-        //     foreach ($channels as $channel) {
-        //         // resubscribe to every channel
-
-        //         $this->subscribeYoutubeChannel($request, $channel->channel_id);
-        //     }
-        // }
+       // resubscribe only every friday
+        $date = Carbon::now();
+        if ($date->isFriday()) {
+            $channels = YoutubeChannel::all();
+            foreach ($channels as $channel) {
+                // resubscribe to every channel
+                $this->subscribeYoutubeChannel($request, $channel->channel_id);
+            }
+        }
 
 
         return response("okay", 200);
