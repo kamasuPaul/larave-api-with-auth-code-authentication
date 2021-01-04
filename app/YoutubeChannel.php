@@ -10,7 +10,7 @@ class YoutubeChannel extends Model
      * The connection name for the model.
      *
      */
-    protected $connection = 'sqlite';
+    // protected $connection = 'sqlite';
 
     protected $fillable = [
         'channel_id'

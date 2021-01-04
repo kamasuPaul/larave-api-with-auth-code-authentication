@@ -13,7 +13,7 @@ class CreateYoutubeChannelsTable extends Migration
      */
     public function up()
     {
-        Schema::connection('sqlite')->create('youtube_channels', function (Blueprint $table) {
+        Schema::create('youtube_channels', function (Blueprint $table) {
             $table->id();
             $table->string('channel_id')->nullable(false);
             $table->timestamps();
