@@ -138,24 +138,7 @@ class YoutubeWebhookController extends Controller
     }
     public function cron(Request $request)
     {
-       $chs = ['UC02x9yG9ZFF_VZp1VnMoptg',
-        'UCxhkCD8_75OQBqHSbiClzAQ',
-        'UCsCDb4ra5i5ZCfC4SprEEAQ',
-        'UCkJZhULmokhi2pRxODltkQA',
-        'UC_KCxlLGawfbbtvx-Ql1OUw',
-        'UCqn7vxdWmVQvOwXGK3UZ53g',
-        'UCs0dMG392MBlTVNdi5COhGQ',
-        'UCgzYsMRnW9qxUhDJSaQVs4w',
-        'UCPalX5tJprIlv7HqjQWP7cA',
-        'UCRhEwzsFYLGcMa4m2AbTAoA',
-        'UCRI6t05DNVlV0XhdI7hx_iw',
-        'UCd_rE4TJnjer1rccGIrwk_g',
-        'UCCnMaGPCECE7BEJc2UqcEeQ',
-        'UCXXXoi68Hv6caNLWfw7j8MQ',
-        'UC1mFW0Nibo8d6eh9_abm31w',
-        'UCYcJwJXNsBWy5QMU74wf9UQ',
-        'UCrqxAYoGfnrzmNz7gIgoeag',
-        'UCapwx3OJAI84cFZlNsVUjxQ',
+       $chs = [
         'UCAeAB8ABXGoGMbXuYPmiu2A',
         'UC4IhgQSETRnAIEb694TwQxQ',
         'UC6rV0GDL4Y6Uo1Vql6u56xw',
