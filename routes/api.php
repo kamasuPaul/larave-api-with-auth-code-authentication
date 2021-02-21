@@ -39,3 +39,4 @@ Route::get("subscribe/{channel_id}", "YoutubeWebhookController@subscribe");
 Route::post("cron", "YoutubeWebhookController@cron");
 Route::get("callback", "YoutubeWebhookController@youtube_subscribe_callback");
 Route::post("callback", "YoutubeWebhookController@youtube_subscribe_callback");
+Route::get("notify-cron","Controller@post_to_facebook");
